@@ -97,6 +97,7 @@ public class ClientThreader implements Runnable {
                     }
 
                     responseTimes.put("[Client " + id + "]", (endTime - startTime));
+                    System.out.println("[Client " + id + "] Response Time: " + (endTime - startTime));
 
 
                 } catch (Exception e) {

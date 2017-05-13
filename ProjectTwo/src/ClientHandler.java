@@ -97,7 +97,7 @@ public class ClientHandler implements Runnable {
 
                         shutdown = true;
 
-                    //todo add a default? in case unexpected data comes from the client
+                        //todo add a default? in case unexpected data comes from the client
                 }
 
             } catch(Exception e){

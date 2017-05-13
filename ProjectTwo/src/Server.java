@@ -1,8 +1,6 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by christianbartram on 5/11/17.
@@ -16,7 +14,7 @@ class Server {
 
     public static void main(String[] args)
     {
-         Socket connection = null;
+        Socket connection = null;
 
         try {
             //creating a server socket
@@ -41,37 +39,3 @@ class Server {
         }
     }
 }
-
-
-
-
-/*
-
-for(int i = 0 i < 10 i++ {
-
-new Thread();
-
-}
-
-for(int i = 0; i < 10; i++)
-{
- thread[i].start();
-}
-
-startTime;
-thread.start.
-
- must have separate time measurements for each thread
-
-thread.stop;
-stopTime;
-
-response time = startTime - stopTime
- */
-//date
-//uptime
-//free
-//netstat
-//who
-//ps -c
-//ps -aux
