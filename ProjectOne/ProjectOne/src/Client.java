@@ -1,21 +1,17 @@
-import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by christianbartram on 5/11/17.
  */
 class Client {
 
-    private static int command = 0; //Command corresponds to the number in the menu
-    private static String hostname; //Hostname specified
+    private static int command = 1; //Command corresponds to the number in the menu
+    private static int id;
     private static long endTime;
-    private static int id = 1;
-    private static HashMap<String, Long> responseTimes = new HashMap<>(); //Clients are the key and response time is the value
+
+    private static String hostname; //Hostname specified
+    private static HashMap<String, Long> responseTimes = new HashMap<>(); //Clients id is the key and response time is the value
+    private static ArrayList<Thread> threads = new ArrayList<>(); //List to hold the threads
 
 
     public static void main(String[] args)
@@ -23,99 +19,20 @@ class Client {
         printMenu();
         processInput();
 
-        for(int i  = 0; i < 70; i++) {
-            connect();
+        for(int i  = 0; i < 100; i++) {
+            ClientThreader threader = new ClientThreader(id, command, hostname, responseTimes, endTime);
+
+            threads.add(new Thread(threader));
+            //threader.run(); this can execute a thread immediately whenever a client opens it connects
+            id++;
         }
+
+        //Execute all the threads at once
+        threads.forEach(Thread::run);
 
         System.out.println("Mean Response Time: " + mean(responseTimes.values()));
 
     }
-
-    private static void connect()
-    {
-        Socket requestSocket = null;
-        DataOutputStream out = null;
-        DataInputStream in = null;
-
-        try {
-            System.out.println("[Client " + id + "] Making connection request to hostname: " + hostname);
-
-            //1. creating a socket to connect to the server
-            requestSocket = new Socket(hostname, 43594);
-
-            System.out.println("[Client " + id + "] Connected to localhost on port 43594");
-
-            //Get Input and Output streams
-            out = new DataOutputStream(requestSocket.getOutputStream());
-            in = new DataInputStream(requestSocket.getInputStream());
-
-            System.out.println("[Client " + id + "] Attempting to retrieve inputted data from server...");
-
-            if(requestSocket != null && out != null && in != null) {
-
-                //Communicating with the server
-                try {
-
-                    //Measure the response time
-                    long startTime = System.currentTimeMillis();
-
-                    //In the output buffer write the command entered and send it to the server
-                    out.writeByte(command);
-                    System.out.println("[Client " + id + "] Data Sent Successfully!");
-
-                    String responseLine;
-
-                    //Read the response from the server
-                    while ((responseLine = in.readLine()) != null) {
-
-                        System.out.println(responseLine);
-
-                        if (responseLine.contains("[500] OK")) {
-                            endTime = System.currentTimeMillis();
-                            break;
-                        }
-                    }
-
-                    responseTimes.put("[Client " + id + "]", (endTime - startTime));
-
-
-                } catch (Exception e) {
-
-                    System.err.println("Data received in unknown format");
-                    e.printStackTrace();
-                }
-            }
-
-
-        } catch(UnknownHostException unknownHost) {
-
-            System.err.println("You are trying to connect to an unknown host!");
-
-
-        } catch(IOException ioException) {
-
-            ioException.printStackTrace();
-
-        } finally {
-
-            //Closing connection
-            try{
-
-                System.out.println("[Client " + id + "] Closing Connection to host");
-
-                in.close();
-                out.close();
-                requestSocket.close();
-
-                id++;
-
-            } catch(IOException ioException) {
-
-                ioException.printStackTrace();
-            }
-        }
-    }
-
 
     /**
      * Prints a menu on the client side for a user to make a selection from
@@ -167,6 +84,7 @@ class Client {
     {
         char[] valid = {'1', '2', '3', '4', '5', '6', '7'};
 
+        System.out.println(input);
         for (char c : valid) {
             if (c == input.charAt(0)) {
                 //The number is valid
@@ -212,6 +130,7 @@ class Client {
 
                     //The second space is the hostname value
                     if(spaceCounter == 2) {
+                        //If there is a thread argument parse hostname differently
                         hostname = input.substring(i + 1, arr.length);
                     }
                 }
@@ -223,8 +142,5 @@ class Client {
         }
         s.close();
     }
-
-
-
 
 }
