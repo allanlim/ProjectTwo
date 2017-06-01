@@ -12,26 +12,37 @@ class Client {
     private static String hostname; //Hostname specified
     private static HashMap<String, Long> responseTimes = new HashMap<>(); //Clients id is the key and response time is the value
     private static ArrayList<Thread> threads = new ArrayList<>(); //List to hold the threads
+    private static Scanner scanner = new Scanner(System.in);
 
 
     public static void main(String[] args) {
-            printMenu();
-            processInput();
-
-            for (int i = 0; i < 5; i++) {
-                ClientThreader threader = new ClientThreader(id, command, hostname, responseTimes, endTime);
-
-                threads.add(new Thread(threader));
-                //threader.run(); this can execute a thread immediately whenever a client opens it connects
-                id++;
+            while(true)
+            {
+                printMenu();
+                processInput(scanner);
+                launchThreads(1);
             }
 
-            //Execute all the threads at once
-            threads.forEach(Thread::run);
-
-            System.out.println("Mean Response Time: " + mean(responseTimes.values()));
-
     }
+
+    private static void launchThreads(int threadCount) {
+        for (int i = 0; i < threadCount; i++) {
+            ClientThreader threader = new ClientThreader(id, command, hostname, responseTimes, endTime);
+
+            threads.add(new Thread(threader));
+            //threader.run(); this can execute a thread immediately whenever a client opens it connects
+            id++;
+        }
+
+        //Execute all the threads at once
+        threads.forEach(Thread::run);
+
+        System.out.println("Mean Response Time: " + mean(responseTimes.values()));
+
+        threads.clear();
+        id = 1;
+    }
+
 
     /**
      * Prints a menu on the client side for a user to make a selection from
@@ -101,15 +112,12 @@ class Client {
      * Validates Input given from the scanner
      * sets hostname and command variables
      */
-    private static void processInput()
+    private static void processInput(Scanner s)
     {
-        Scanner s = new Scanner(System.in);
-        String input;
-
         try {
+            String input;
 
             input = s.nextLine();
-
 
             if(Character.getNumericValue(input.charAt(0)) == 7) {
                 System.out.println("Thank you for using this software!");
@@ -140,10 +148,11 @@ class Client {
                 }
             }
 
+            //s.close();
+
         } catch(Exception e) {
             System.err.println("That input is invalid please enter a number between 1 and 7");
         }
-        s.close();
     }
 
 }

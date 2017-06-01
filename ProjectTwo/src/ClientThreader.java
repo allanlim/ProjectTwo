@@ -112,7 +112,7 @@ public class ClientThreader implements Runnable {
         } catch(UnknownHostException unknownHost) {
 
             System.err.println("You are trying to connect to an unknown host!");
-            System.exit(0);
+
 
         } catch(IOException ioException) {
             System.err.println("The host you have selected is either not running or not responding!");
@@ -135,7 +135,7 @@ public class ClientThreader implements Runnable {
             } catch(NullPointerException e) {
 
                 System.err.println("That hostname is unknown!");
-                System.exit(0);
+                //System.exit(0);
 
             }
         }
