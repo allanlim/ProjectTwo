@@ -103,7 +103,8 @@ public class ClientThreader implements Runnable {
                 } catch (Exception e) {
 
                     System.err.println("Data received in unknown format");
-                    e.printStackTrace();
+                    System.exit(0);
+
                 }
             }
 
@@ -111,16 +112,16 @@ public class ClientThreader implements Runnable {
         } catch(UnknownHostException unknownHost) {
 
             System.err.println("You are trying to connect to an unknown host!");
-
+            System.exit(0);
 
         } catch(IOException ioException) {
+            System.err.println("The host you have selected is either not running or not responding!");
 
-            ioException.printStackTrace();
-
+            System.exit(0);
         } finally {
 
             //Closing connection
-            try{
+            try {
 
                 System.out.println("[Client " + id + "] Closing Connection to host");
 
@@ -128,10 +129,16 @@ public class ClientThreader implements Runnable {
                 out.close();
                 requestSocket.close();
 
-            } catch(IOException ioException) {
+            } catch (IOException ioException) {
+                System.exit(0);
 
-                ioException.printStackTrace();
+            } catch(NullPointerException e) {
+
+                System.err.println("That hostname is unknown!");
+                System.exit(0);
+
             }
         }
     }
 }
+

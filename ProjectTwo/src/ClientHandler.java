@@ -164,7 +164,7 @@ public class ClientHandler implements Runnable {
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             while ((s = stdInput.readLine()) != null) {
-                sb.append(s);
+                sb.append(s).append("\n");
             }
 
         } catch(IOException e) {

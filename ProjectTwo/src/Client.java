@@ -14,23 +14,22 @@ class Client {
     private static ArrayList<Thread> threads = new ArrayList<>(); //List to hold the threads
 
 
-    public static void main(String[] args)
-    {
-        printMenu();
-        processInput();
+    public static void main(String[] args) {
+            printMenu();
+            processInput();
 
-        for(int i  = 0; i < 100; i++) {
-            ClientThreader threader = new ClientThreader(id, command, hostname, responseTimes, endTime);
+            for (int i = 0; i < 5; i++) {
+                ClientThreader threader = new ClientThreader(id, command, hostname, responseTimes, endTime);
 
-            threads.add(new Thread(threader));
-            //threader.run(); this can execute a thread immediately whenever a client opens it connects
-            id++;
-        }
+                threads.add(new Thread(threader));
+                //threader.run(); this can execute a thread immediately whenever a client opens it connects
+                id++;
+            }
 
-        //Execute all the threads at once
-        threads.forEach(Thread::run);
+            //Execute all the threads at once
+            threads.forEach(Thread::run);
 
-        System.out.println("Mean Response Time: " + mean(responseTimes.values()));
+            System.out.println("Mean Response Time: " + mean(responseTimes.values()));
 
     }
 
@@ -84,7 +83,6 @@ class Client {
     {
         char[] valid = {'1', '2', '3', '4', '5', '6', '7'};
 
-        System.out.println(input);
         for (char c : valid) {
             if (c == input.charAt(0)) {
                 //The number is valid
@@ -112,6 +110,12 @@ class Client {
 
             input = s.nextLine();
 
+
+            if(Character.getNumericValue(input.charAt(0)) == 7) {
+                System.out.println("Thank you for using this software!");
+                System.exit(0);
+            }
+
             //Ensure number is between 1 and 7
             while(!isValidInput(input)) {
                 System.err.println("Your input is invalid please enter a number between 1 and 7 and ensure that the -hostname flag is set");
@@ -138,7 +142,6 @@ class Client {
 
         } catch(Exception e) {
             System.err.println("That input is invalid please enter a number between 1 and 7");
-            e.printStackTrace();
         }
         s.close();
     }
