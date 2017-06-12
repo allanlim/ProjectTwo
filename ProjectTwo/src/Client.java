@@ -20,7 +20,7 @@ class Client {
             {
                 printMenu();
                 processInput(scanner);
-                launchThreads(1);
+                launchThreads(5);
             }
 
     }
