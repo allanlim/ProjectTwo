@@ -77,7 +77,7 @@ public class ClientHandler implements Runnable {
                     case 4:
                         System.out.println("[Server] Received Request for Host Network Statistics from " + service.getInetAddress().getHostName());
 
-                        clientResponse(out, "Host NetStat is " + readCommandOutput(runCommand("netstat -s")), true);
+                        clientResponse(out, "Host NetStat is " + readCommandOutput(runCommand("netstat")), true);
 
                         break;
                     case 5:
