@@ -1,4 +1,4 @@
-# ProjectOne
+# ProjectTwo
 Project one for Distributed Computing and Networks at UNF
 
 ## Running the software
